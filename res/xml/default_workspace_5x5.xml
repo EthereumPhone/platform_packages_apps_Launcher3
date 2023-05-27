@@ -17,21 +17,11 @@
 <favorites xmlns:launcher="http://schemas.android.com/apk/res-auto/com.android.launcher3">
 
     <!-- Hotseat (We use the screen as the position of the item in the hotseat) -->
-    <!-- Dialer, Messaging, [Maps/Music/Settings], Browser, Camera -->
-    <resolve
+    <!-- SMS, Three, Camera, Wallet, Light Node App -->
+     <resolve
         launcher:container="-101"
         launcher:screen="0"
         launcher:x="0"
-        launcher:y="0" >
-        <favorite launcher:uri="#Intent;action=android.intent.action.DIAL;end" />
-        <favorite launcher:uri="tel:123" />
-        <favorite launcher:uri="#Intent;action=android.intent.action.CALL_BUTTON;end" />
-    </resolve>
-
-    <resolve
-        launcher:container="-101"
-        launcher:screen="1"
-        launcher:x="1"
         launcher:y="0" >
         <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MESSAGING;end" />
         <favorite launcher:uri="sms:" />
@@ -42,12 +32,24 @@
 
     <resolve
         launcher:container="-101"
+        launcher:screen="1"
+        launcher:x="1"
+        launcher:y="0" >
+        <favorite 
+            launcher:packageName="de.baumann.browser"
+            launcher:className="de.baumann.browser.activity.BrowserActivity"
+        />
+    </resolve>
+
+    <resolve
+        launcher:container="-101"
         launcher:screen="2"
         launcher:x="2"
         launcher:y="0" >
-        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MAPS;end" />
-        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MUSIC;end" />
-        <favorite launcher:uri="#Intent;action=android.settings.SETTINGS;end" />
+        <favorite 
+            launcher:packageName="org.ethereumphone.nftcreator"
+            launcher:className="org.ethereumphone.nftcreator.MainActivity"
+        />
     </resolve>
 
     <resolve
@@ -55,45 +57,55 @@
         launcher:screen="3"
         launcher:x="3"
         launcher:y="0" >
-        <favorite
-            launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_BROWSER;end" />
-        <favorite launcher:uri="http://www.example.com/" />
+        <favorite launcher:uri="walletapp://ax.com" />
     </resolve>
+
 
     <resolve
         launcher:container="-101"
         launcher:screen="4"
         launcher:x="4"
         launcher:y="0" >
-        <favorite launcher:uri="#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end" />
-        <favorite launcher:uri="#Intent;action=android.intent.action.CAMERA_BUTTON;end" />
+        <favorite launcher:uri="lightnodestats://ex.com" />
     </resolve>
 
     <!-- Bottom row -->
+
     <resolve
         launcher:screen="0"
         launcher:x="0"
         launcher:y="-1" >
-	    <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_EMAIL;end" />
-	    <favorite launcher:uri="mailto:" />
-
+        <favorite launcher:uri="#Intent;action=android.intent.action.DIAL;end" />
+        <favorite launcher:uri="tel:123" />
+        <favorite launcher:uri="#Intent;action=android.intent.action.CALL_BUTTON;end" />
     </resolve>
 
-    <resolve
+    <favorite 
+        launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_CONTACTS;end"
         launcher:screen="0"
         launcher:x="1"
-        launcher:y="-1" >
-	    <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_GALLERY;end" />
-	    <favorite launcher:uri="#Intent;type=images/*;end" />
-
-    </resolve>
+        launcher:y="-1" />
 
     <resolve
         launcher:screen="0"
-        launcher:x="4"
+        launcher:x="2"
         launcher:y="-1" >
-        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_MARKET;end" />
-        <favorite launcher:uri="market://details?id=com.android.launcher" />
+        <favorite launcher:uri="#Intent;action=android.intent.action.MAIN;category=android.intent.category.APP_GALLERY;end" />
+        <favorite launcher:uri="#Intent;type=images/*;end" />
     </resolve>
+
+    <favorite 
+        launcher:uri="#Intent;action=android.media.action.STILL_IMAGE_CAMERA;end"
+        launcher:screen="0"
+        launcher:x="3"
+        launcher:y="-1" />
+
+    <favorite
+        launcher:packageName="com.android.settings"
+        launcher:className="com.android.settings.Settings"
+        launcher:screen="0"
+        launcher:x="4"
+        launcher:y="-1" />
+    
 
 </favorites>
