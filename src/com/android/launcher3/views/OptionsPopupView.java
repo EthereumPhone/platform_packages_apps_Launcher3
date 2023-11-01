@@ -55,6 +55,7 @@ import com.android.launcher3.testing.TestLogging;
 import com.android.launcher3.testing.shared.TestProtocol;
 import com.android.launcher3.util.PackageManagerHelper;
 import com.android.launcher3.widget.picker.WidgetsFullSheet;
+import android.net.Uri;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -269,7 +270,11 @@ public class OptionsPopupView extends ArrowPopup<Launcher>
         if (!TextUtils.isEmpty(pickerPackage)) {
             intent.setPackage(pickerPackage);
         }
-        return launcher.startActivitySafely(v, intent, placeholderInfo(intent));
+        //return launcher.startActivitySafely(v, intent, placeholderInfo(intent));
+        // Open intent "ethoswallpaper://ex.com"
+        Intent intent2 = new Intent(Intent.ACTION_VIEW, Uri.parse("ethoswallpaper://ex.com"));
+        intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return launcher.startActivitySafely(v, intent2, null);
     }
 
     static WorkspaceItemInfo placeholderInfo(Intent intent) {
