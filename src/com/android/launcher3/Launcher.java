@@ -104,6 +104,9 @@ import static com.android.launcher3.util.ItemInfoMatcher.forFolderMatch;
 import static com.android.launcher3.util.SettingsCache.TOUCHPAD_NATURAL_SCROLLING;
 
 import android.animation.Animator;
+import android.database.Cursor;
+import java.io.File;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -267,6 +270,7 @@ import com.android.systemui.plugins.shared.LauncherOverlayManager;
 import com.android.systemui.plugins.shared.LauncherOverlayManager.LauncherOverlayTouchProxy;
 import com.android.window.flags.Flags;
 
+import android.os.AsyncTask;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -500,6 +504,20 @@ public class Launcher extends StatefulActivity<LauncherState>
 
         super.onCreate(savedInstanceState);
 
+        try {
+            SharedPreferences prefs = getSharedPreferences("MyPrefsFile", Context.MODE_PRIVATE);
+            boolean isTaskExecuted = prefs.getBoolean("task_executed_new_messaging", false);
+    
+            if (!isTaskExecuted) {
+                new ModifyDatabaseTask().execute();
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("task_executed_new_messaging", true);
+                editor.apply();
+            }    
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
         LauncherAppState app = LauncherAppState.getInstance(this);
         mModel = app.getModel();
 
@@ -3080,3 +3098,38 @@ public class Launcher extends StatefulActivity<LauncherState>
 
     // End of Getters and Setters
 }
+
+class ModifyDatabaseTask extends AsyncTask<Void, Void, Void> {
+
+    private static final String DB_PATH = "/data/data/com.android.launcher3/databases/launcher.db";
+    private static final String APP_PACKAGE = "org.ethereumhpone.messenger";
+    private static final String APP_CLASS = "org.ethereumhpone.messenger.MainActivity";
+    private static final String INTENT = "#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=" + APP_PACKAGE + "/" + APP_CLASS + ";end";
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            File dbFile = new File(DB_PATH);
+            if (dbFile.exists()) {
+                SQLiteDatabase db = SQLiteDatabase.openDatabase(DB_PATH, null, SQLiteDatabase.OPEN_READWRITE);
+
+                String query = "SELECT COUNT(*) FROM favorites WHERE intent=?";
+                Cursor cursor = db.rawQuery(query, new String[]{INTENT});
+                if (cursor != null) {
+                    cursor.moveToFirst();
+                    int count = cursor.getInt(0);
+                    cursor.close();
+
+                    if (count == 0) {
+                        String insertQuery = "INSERT INTO favorites ("
+                                + "title, intent, container, screen, cellX, cellY, spanX, spanY, itemType, appWidgetId, icon, appWidgetProvider, modified, restored, profileId, rank, options, appWidgetSource"
+                                + ") VALUES ("
+                                + "'Messenger', ?, -101, 0, 0, 0, 1, 1, 0, -1, NULL, NULL, 0, 0, 0, 0, 0, -1"
+                                + ")";
+                        db.execSQL(insertQuery, new Object[]{INTENT});
+                    }
+                }
+                db.close();
+            }
+            return null;
+        }
+    }
